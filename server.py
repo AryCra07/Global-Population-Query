@@ -1,14 +1,22 @@
+#  server.py
+#  Copyright (c) 2023 Yuanhao Shen
+
 import asyncio
 import math
-import os
 import numpy as np
 from sanic import Sanic
 from sanic.response import json
 from sanic.log import logger
 from shapely.geometry import Polygon
 from shapely.errors import TopologicalError
+from pre_processor import preprocess
 
 app = Sanic("population")
+
+
+@app.listener('before_server_start')
+async def setup(app, loop):
+    await preprocess()
 
 
 async def get_block_data(block_x, block_y, polygon, step):

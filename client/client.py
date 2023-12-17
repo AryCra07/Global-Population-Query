@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from PIL import Image, ImageTk
+from os import path
+
+path = path.dirname(__file__)
 
 
 class Coordinate:
@@ -26,7 +29,7 @@ class Coordinate:
 
     @property
     def x_sec(self):
-        return self.x % 60
+        return f'{self.x % 60:.2f}'
 
     @property
     def y_deg(self):
@@ -38,7 +41,7 @@ class Coordinate:
 
     @property
     def y_sec(self):
-        return self.y % 60
+        return f'{self.y % 60:.2f}'
 
 
 class ClientApp:
@@ -59,6 +62,16 @@ class ClientApp:
         self.list_frame = tk.Frame(self.root)
         self.list_frame.pack(side="right", fill="both", expand=True)
 
+        header_frame = tk.Frame(self.list_frame)
+        header_frame.pack(side="top", fill="x")
+
+        # 添加列名
+        label_longitude = tk.Label(header_frame, text="经度", width=20)
+        label_longitude.pack(side="left")
+
+        label_latitude = tk.Label(header_frame, text="纬度", width=20)
+        label_latitude.pack(side="left")
+
         self.listbox = tk.Listbox(self.list_frame)
         self.listbox.pack(side="top", fill="both", expand=True)
 
@@ -73,12 +86,12 @@ class ClientApp:
 
     def load_world_map(self):
         try:
-            # 加载图片并调整大小以适合 Canvas
-            self.map_image = Image.open('D:\ASchool\大三上\【5】Python\MyH\Final\Population\client\world_map_gridded.png')
+            # 加载图片并调整大小
+            self.map_image = Image.open('world_map_gridded.png')
             self.map_image = self.map_image.resize((1400, 700), Image.Resampling.LANCZOS)  # 修改这里
             self.map_photo = ImageTk.PhotoImage(self.map_image)
 
-            # 在 Canvas 上绘制图片
+            # 绘制图片
             self.canvas.create_image(0, 0, anchor="nw", image=self.map_photo)
         except IOError:
             print("无法加载地图图片")
@@ -99,9 +112,10 @@ class ClientApp:
 
     def update_listbox(self):
         self.listbox.delete(0, tk.END)
+        space = ' ' * 10
         for coord in self.coordinate_list:
             self.listbox.insert(tk.END,
-                                f"{coord.x_deg}°{coord.x_min}′{coord.x_sec}″, {coord.y_deg}°{coord.y_min}′{coord.y_sec}″")
+                                f"{coord.x_deg}°{coord.x_min}′{coord.x_sec}″" + space + f"{coord.y_deg}°{coord.y_min}′{coord.y_sec}″")
 
     def submit(self):
         if not self.coordinate_list:
@@ -126,7 +140,7 @@ class ClientApp:
             data = np.array(response_data.get("res")).transpose((1, 0))
             total_population = response_data.get("total")
 
-            # 使用 Matplotlib 和 Cartopy 绘制结果
+            # 绘制结果
             self.plot_result(data, total_population)
         except requests.RequestException as e:
             messagebox.showerror("错误", f"请求失败: {e}")
