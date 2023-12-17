@@ -18,14 +18,14 @@ async def get_block_data(block_x, block_y, polygon, step):
     min_x, min_y, max_x, max_y = polygon.bounds
     block_data = np.load(f"./data/data_{block_x}_{block_y}.npy")
     for second_x in range(max(block_x * 3600, math.floor(min_x / 30) * 30),
-                          min((block_x + step) * 3600, math.ceil(max_x / 30) * 30), 30):  # 按每30秒枚举经度
+                          min((block_x + step) * 3600, math.ceil(max_x / 30) * 30), 30):
         for second_y in range(min(block_y * 3600, math.ceil(max_y / 30) * 30),
-                              max((block_y - step) * 3600, math.floor(min_y / 30) * 30), -30):  # 按每30秒枚举纬度
-            x_offset = int((block_y * 3600 - second_y) / 30)  # 在block中的行偏移量
-            y_offset = int((second_x - block_x * 3600) / 30)  # 在block中的列偏移量
+                              max((block_y - step) * 3600, math.floor(min_y / 30) * 30), -30):
+            x_offset = int((block_y * 3600 - second_y) / 30)
+            y_offset = int((second_x - block_x * 3600) / 30)
             cell_polygon = Polygon(((second_x, second_y), (second_x + 30, second_y), (second_x + 30, second_y - 30),
-                                    (second_x, second_y - 30))).intersection(polygon)  # 该cell和多边形的重合部分
-            if cell_polygon.area > 0:  # 如果有重合
+                                    (second_x, second_y - 30))).intersection(polygon)
+            if cell_polygon.area > 0:
                 res.append((second_x, second_y, cell_polygon.area / 900 * block_data[x_offset, y_offset]))
                 if not np.isnan(res[-1][2]):
                     total += res[-1][2]
