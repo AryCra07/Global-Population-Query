@@ -44,8 +44,6 @@ async def get_block_data(block_x, block_y, polygon, step):
 async def get_data(request):
     """
     data接口，接受一个多边形的坐标列表，返回该多边形内的人口数据
-    :param request: 格式为{"coordinates": [[x1, y1], [x2, y2], ...]}
-    :return: 格式为{"total": 人口总数, "res": [[x1, y1, 人口数], [x2, y2, 人口数], ...]}
     """
     try:
         point_list = request.json.get("coordinates")

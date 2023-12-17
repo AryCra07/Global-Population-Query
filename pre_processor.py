@@ -10,7 +10,7 @@ async def preprocess():
     预处理数据，将原始数据处理成10度*10度的block
     """
     for i in range(1, 9):
-        step = 10  # 处理成10度*10度的block
+        step = 10
         with open(f"./gpw-v4-population-count-rev11_2020_30_sec_asc/gpw_v4_population_count_rev11_2020_30_sec_{i}.asc",
                   "r") as f:
             f.readline()

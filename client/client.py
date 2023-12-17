@@ -88,7 +88,7 @@ class ClientApp:
         try:
             # 加载图片并调整大小
             self.map_image = Image.open('world_map_gridded.png')
-            self.map_image = self.map_image.resize((1400, 700), Image.Resampling.LANCZOS)  # 修改这里
+            self.map_image = self.map_image.resize((1400, 700), Image.Resampling.LANCZOS)
             self.map_photo = ImageTk.PhotoImage(self.map_image)
 
             # 绘制图片
