@@ -6,3 +6,5 @@
 - Sanic 实现服务端
 - tkinter 实现客户端
 - matplotlib 绘制图片
+
+![world map](client/world_map.png)
